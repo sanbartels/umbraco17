@@ -1,0 +1,21 @@
+services:
+  umbraco:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - Umbraco__CMS__Global__UseHttps=false
+    volumes:
+      - ./src:/app/project
+      - umbraco-packages:/root/.nuget/packages
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    working_dir: /app/project
+
+volumes:
+  umbraco-packages:
