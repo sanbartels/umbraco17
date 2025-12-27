@@ -21,6 +21,11 @@ cd Umbraco
 ```bash
 docker-compose up
 ```
+Si se quiere iniciar el umbraco limpio se deberá elimira la carpeta src y ejecutar el comando:
+
+```bash
+docker compose up --build
+```
 
 El contenedor se iniciará y Umbraco estará disponible en:
 
