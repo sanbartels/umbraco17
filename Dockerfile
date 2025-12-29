@@ -90,7 +90,7 @@ echo "Restaurando dependencias..."\n\
 dotnet restore\n\
 \n\
 echo "Iniciando Umbraco con hot reload..."\n\
-exec dotnet watch run --no-restore --urls "http://+:5001" --verbose\n' > /app/start.sh \
+exec dotnet watch run --urls "http://+:5001" --verbose\n' > /app/start.sh \
     && chmod +x /app/start.sh
 
 # Exponer el puerto
