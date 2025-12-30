@@ -116,10 +116,12 @@ El proyecto utiliza **SQLite** como base de datos, configurada en `src/appsettin
 
 ```json
 "ConnectionStrings": {
-  "umbracoDbDSN": "Data Source=/app/project/App_Data/Umbraco.sqlite.db;Cache=Shared;Foreign Keys=True;Pooling=True;Mode=ReadWriteCreate",
+  "umbracoDbDSN": "Data Source=App_Data/Umbraco.sqlite.db;Cache=Shared;Foreign Keys=True;Pooling=True",
   "umbracoDbDSN_ProviderName": "Microsoft.Data.Sqlite"
 }
 ```
+
+
 
 **Arquitectura de almacenamiento multiplataforma:**
 
@@ -166,20 +168,31 @@ Los cambios se aplican **automáticamente sin reiniciar** el contenedor (hot rel
 
 ### Error 500 al abrir http://localhost:5001
 
-Si ves un error 500, probablemente la base de datos no se creó correctamente:
+Si ves un error 500, puede haber varias causas:
+
+**Causa 1: Base de datos no se creó correctamente**
 
 1. **Verificar logs**:
    ```bash
-   docker compose logs umbraco | grep -i error
+   docker compose logs umbraco | grep -i "unable to open database"
    ```
 
-2. **Buscar "unable to open database file"**: Si ves este error, significa que el path de la BD está mal o no tiene permisos
+2. **Si ves "unable to open database file"**: Significa que SQLite no puede crear la BD
 
-3. **Solución**: Resetear volúmenes y volver a arrancar
+3. **Solución**: Asegurar que el Dockerfile tiene las dependencias SQLite:
    ```bash
-   ./reset-db.sh
+   docker compose down
    docker compose up --build
    ```
+
+**Causa 2: Volúmenes corruptos**
+
+Si ya funcionaba antes pero ahora no:
+
+```bash
+./reset-db.sh
+docker compose up --build
+```
 
 ### El contenedor se reinicia constantemente
 
@@ -339,7 +352,7 @@ Durante el desarrollo de esta configuración multiplataforma se resolvieron vari
 
 4. **Conflicto de nombres**: MSBuild intentaba crear archivo ejecutable `UmbracoSite` pero existía directorio con ese nombre → **Solución**: `AssemblyName=UmbracoApp` en `.csproj`
 
-5. **Path `|DataDirectory|` no se resolvía**: Variable especial de ASP.NET no funcionaba correctamente en Docker → **Solución**: Path absoluto `/app/project/App_Data/`
+5. **SQLite requiere librerías nativas del sistema**: Instalación de `sqlite3` y `libsqlite3-dev` en Dockerfile para garantizar compatibilidad
 
 ### Estructura de Volúmenes
 
@@ -371,6 +384,11 @@ Si encontrás bugs o tenés sugerencias, por favor:
 3. Mencioná tu sistema operativo y arquitectura (Intel/ARM)
 
 ## 📝 Changelog
+
+### v1.1.0 (Dic 2024)
+- 🔧 **FIX**: Agregadas librerías nativas SQLite al Dockerfile
+- 🔧 Connection string optimizado
+- ✅ Garantiza funcionamiento en clones nuevos del repositorio
 
 ### v1.0.0 (Dic 2024)
 - ✅ Configuración inicial multiplataforma
