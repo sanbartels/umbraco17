@@ -10,6 +10,8 @@ RUN dotnet new install Umbraco.Templates
 RUN apt-get update && apt-get install -y \
     libgdiplus \
     libc6-dev \
+    sqlite3 \
+    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear el script de inicio directamente en el contenedor
@@ -27,29 +29,6 @@ if [ ! -f *.csproj ]; then\n\
     mv UmbracoSite/* . 2>/dev/null || true\n\
     rmdir UmbracoSite 2>/dev/null || true\n\
   fi\n\
-  \n\
-  # Modificar appsettings.Development.json para deshabilitar HTTPS en desarrollo\n\
-  echo "Configurando appsettings para desarrollo sin HTTPS..."\n\
-  cat > appsettings.Development.json << "APPSETTINGS_EOF"\n\
-{\n\
-  "Umbraco": {\n\
-    "CMS": {\n\
-      "Global": {\n\
-        "UseHttps": false\n\
-      },\n\
-      "Security": {\n\
-        "AllowPasswordReset": true\n\
-      }\n\
-    }\n\
-  },\n\
-  "Logging": {\n\
-    "LogLevel": {\n\
-      "Default": "Information",\n\
-      "Microsoft.AspNetCore": "Warning"\n\
-    }\n\
-  }\n\
-}\n\
-APPSETTINGS_EOF\n\
   \n\
   # Modificar launchSettings.json\n\
   if [ -f "Properties/launchSettings.json" ]; then\n\
@@ -73,7 +52,7 @@ LAUNCH_EOF\n\
   fi\n\
 fi\n\
 \n\
-# Asegurar que App_Data tenga los permisos correctos para evitar problemas multiplataforma\n\
+# Asegurar que los directorios tengan los permisos correctos para evitar problemas multiplataforma\n\
 chmod -R 777 /app/project/App_Data 2>/dev/null || true\n\
 chmod -R 777 /app/project/wwwroot/media 2>/dev/null || true\n\
 \n\
