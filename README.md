@@ -6,19 +6,17 @@ Desarrollado por **IMERGI**.
 
 ## ✨ Características
 
-- ✅ **100% Multiplataforma**: Funciona en macOS (Intel/Apple Silicon), Linux y Windows
-- ✅ **Hot Reload**: `dotnet watch` configurado para recargar cambios automáticamente
-- ✅ **SQLite en Volúmenes Docker**: Base de datos aislada para evitar problemas de compatibilidad
-- ✅ **.NET 10**: Última versión del SDK de .NET
-- ✅ **Puerto 5001**: Evita conflictos con AirPlay Receiver en macOS
-- ✅ **Scripts helpers**: Verificación de requisitos, inicio automático y reset de BD
+-   ✅ **100% Multiplataforma**: Funciona en macOS (Intel/Apple Silicon), Linux y Windows
+-   ✅ **Hot Reload**: `dotnet watch` configurado para recargar cambios automáticamente
+-   ✅ **SQLite en Volúmenes Docker**: Base de datos aislada para evitar problemas de compatibilidad
+-   ✅ **.NET 10**: Última versión del SDK de .NET
+-   ✅ **Puerto 5001**: Evita conflictos con AirPlay Receiver en macOS
+-   ✅ **Scripts helpers**: Verificación de requisitos, inicio automático y reset de BD
 
 ## 📋 Requisitos Previos
 
-- [Docker](https://www.docker.com/get-started) (versión 20.10 o superior)
-- [Docker Compose](https://docs.docker.com/compose/install/) (versión 2.0 o superior)
-
-> **Nota**: Este proyecto usa `docker compose` (v2, sin guion) que es el estándar moderno. Si tenés la versión vieja `docker-compose` (v1, con guion), actualizá Docker Desktop o instalá el plugin de Compose v2.
+-   [Docker](https://www.docker.com/get-started) (versión 20.10 o superior)
+-   [Docker Compose](https://docs.docker.com/compose/install/) (versión 2.0 o superior)
 
 ## 🚀 Inicio Rápido
 
@@ -36,18 +34,21 @@ cd umbraco17
 ```
 
 Este script verifica:
-- ✅ Docker instalado y corriendo
-- ✅ Docker Compose v2 disponible
-- ✅ Puerto 5001 libre
+
+-   ✅ Docker instalado y corriendo
+-   ✅ Docker Compose v2 disponible
+-   ✅ Puerto 5001 libre
 
 ### 3. Iniciar el Contenedor
 
 **Opción A: Script automático (Recomendado)**
+
 ```bash
 ./dev-start.sh
 ```
 
 **Opción B: Manual**
+
 ```bash
 docker compose up --build
 ```
@@ -77,8 +78,9 @@ Si necesitás empezar de cero o tuviste problemas con la BD:
 ```
 
 Este script limpiará:
-- Volúmenes de Docker (base de datos y archivos media)
-- Archivos SQLite locales si existen
+
+-   Volúmenes de Docker (base de datos y archivos media)
+-   Archivos SQLite locales si existen
 
 Luego podés volver a ejecutar `./dev-start.sh` o `docker compose up --build`
 
@@ -121,22 +123,21 @@ El proyecto utiliza **SQLite** como base de datos, configurada en `src/appsettin
 }
 ```
 
-
-
 **Arquitectura de almacenamiento multiplataforma:**
 
-- La base de datos vive en un **volumen Docker** (`umbraco-data`) montado en `/app/project/App_Data/`
-- Los archivos media viven en otro **volumen Docker** (`umbraco-media`) montado en `/app/project/wwwroot/media/`
-- Tu código fuente en `src/` se monta como volumen con flag `:delegated` para mejor performance en macOS
-- Los directorios `bin/` y `obj/` NO se montan en volúmenes separados para evitar conflictos de compilación
+-   La base de datos vive en un **volumen Docker** (`umbraco-data`) montado en `/app/project/App_Data/`
+-   Los archivos media viven en otro **volumen Docker** (`umbraco-media`) montado en `/app/project/wwwroot/media/`
+-   Tu código fuente en `src/` se monta como volumen con flag `:delegated` para mejor performance en macOS
+-   Los directorios `bin/` y `obj/` NO se montan en volúmenes separados para evitar conflictos de compilación
 
 **¿Por qué volúmenes Docker y no filesystem local?**
 
 Esto evita problemas críticos de:
-- **Permisos**: Linux (contenedor) vs macOS/Windows (host) usan diferentes sistemas de permisos
-- **Compatibilidad binaria**: SQLite creado en Linux x86_64 puede no funcionar en macOS ARM64 (Apple Silicon)
-- **File locking**: SQLite usa locks que funcionan diferente en cada filesystem
-- **Performance**: Volúmenes Docker son mucho más rápidos que compartir archivos con el host en macOS
+
+-   **Permisos**: Linux (contenedor) vs macOS/Windows (host) usan diferentes sistemas de permisos
+-   **Compatibilidad binaria**: SQLite creado en Linux x86_64 puede no funcionar en macOS ARM64 (Apple Silicon)
+-   **File locking**: SQLite usa locks que funcionan diferente en cada filesystem
+-   **Performance**: Volúmenes Docker son mucho más rápidos que compartir archivos con el host en macOS
 
 > **Nota**: No podrás abrir el archivo SQLite directamente con herramientas en tu Mac (DB Browser, etc.). Para inspeccionar la BD, usá comandos dentro del contenedor o exportá/importá datos.
 
@@ -144,21 +145,22 @@ Esto evita problemas críticos de:
 
 El contenedor está configurado con las siguientes variables de entorno:
 
-- `ASPNETCORE_ENVIRONMENT=Development`
-- `ASPNETCORE_URLS=http://+:5001`
-- `Umbraco__CMS__Global__UseHttps=false`
+-   `ASPNETCORE_ENVIRONMENT=Development`
+-   `ASPNETCORE_URLS=http://+:5001`
+-   `Umbraco__CMS__Global__UseHttps=false`
 
 ### Puertos
 
-- **Puerto 5001**: Aplicación Umbraco (HTTP)
-  - Cambio de 5000 → 5001 para evitar conflicto con AirPlay Receiver en macOS
-  
+-   **Puerto 5001**: Aplicación Umbraco (HTTP)
+    -   Cambio de 5000 → 5001 para evitar conflicto con AirPlay Receiver en macOS
+
 ### Hot Reload y Desarrollo
 
 El proyecto usa `dotnet watch` que detecta cambios en:
-- Archivos `.cs` (C#)
-- Archivos `.cshtml` (Razor Views)
-- Archivos `.css` y `.js`
+
+-   Archivos `.cs` (C#)
+-   Archivos `.cshtml` (Razor Views)
+-   Archivos `.css` y `.js`
 
 Los cambios se aplican **automáticamente sin reiniciar** el contenedor (hot reload).
 
@@ -173,17 +175,18 @@ Si ves un error 500, puede haber varias causas:
 **Causa 1: Base de datos no se creó correctamente**
 
 1. **Verificar logs**:
-   ```bash
-   docker compose logs umbraco | grep -i "unable to open database"
-   ```
+
+    ```bash
+    docker compose logs umbraco | grep -i "unable to open database"
+    ```
 
 2. **Si ves "unable to open database file"**: Significa que SQLite no puede crear la BD
 
 3. **Solución**: Asegurar que el Dockerfile tiene las dependencias SQLite:
-   ```bash
-   docker compose down
-   docker compose up --build
-   ```
+    ```bash
+    docker compose down
+    docker compose up --build
+    ```
 
 **Causa 2: Volúmenes corruptos**
 
@@ -199,24 +202,26 @@ docker compose up --build
 Si el contenedor entra en un loop de reinicios:
 
 1. **Ver logs completos**:
-   ```bash
-   docker compose logs --tail=100 umbraco
-   ```
+
+    ```bash
+    docker compose logs --tail=100 umbraco
+    ```
 
 2. **Buscar errores de compilación**: Si hay errores de build (MSBxxxx), probablemente hay archivos corruptos en `bin/obj`
 
 3. **Solución**: Limpiar y reconstruir
-   ```bash
-   docker compose down
-   rm -rf src/bin src/obj
-   docker compose up --build
-   ```
+    ```bash
+    docker compose down
+    rm -rf src/bin src/obj
+    docker compose up --build
+    ```
 
 ### Error "AssemblyName" o problemas con UmbracoSite
 
 Este proyecto usa `AssemblyName=UmbracoApp` en el `.csproj` para evitar conflictos con directorios. **No cambies este valor**.
 
 Si ves errores relacionados con `UmbracoSite` vs `UmbracoApp`:
+
 ```bash
 docker compose down
 rm -rf src/bin src/obj
@@ -259,9 +264,10 @@ docker volume ls | grep umbraco
 ```
 
 Deberías ver:
-- `umbraco17_umbraco-data`
-- `umbraco17_umbraco-media`
-- `umbraco17_umbraco-packages`
+
+-   `umbraco17_umbraco-data`
+-   `umbraco17_umbraco-media`
+-   `umbraco17_umbraco-packages`
 
 Si no existen, Docker los creará automáticamente al hacer `docker-compose up`.
 
@@ -303,21 +309,25 @@ docker compose up --build
 Si hacés cambios en archivos `.cs` o `.cshtml` pero no se reflejan:
 
 1. **Verificar que dotnet watch esté corriendo**:
-   ```bash
-   docker compose logs umbraco | grep "dotnet watch"
-   ```
-   Deberías ver: `dotnet watch 🔥 Hot reload enabled`
+
+    ```bash
+    docker compose logs umbraco | grep "dotnet watch"
+    ```
+
+    Deberías ver: `dotnet watch 🔥 Hot reload enabled`
 
 2. **Ver si detectó el cambio**:
-   ```bash
-   docker compose logs -f umbraco
-   ```
-   Cuando guardás un archivo, deberías ver logs de rebuild
+
+    ```bash
+    docker compose logs -f umbraco
+    ```
+
+    Cuando guardás un archivo, deberías ver logs de rebuild
 
 3. **Si no funciona**: Reiniciar el contenedor
-   ```bash
-   docker compose restart umbraco
-   ```
+    ```bash
+    docker compose restart umbraco
+    ```
 
 ### Cambié appsettings.json pero no se aplica
 
@@ -332,27 +342,14 @@ docker compose restart umbraco
 Esto es normal en la primera compilación. Para mejorar performance:
 
 1. **Asegurate de tener suficiente memoria asignada a Docker** (al menos 4GB)
-   - Docker Desktop → Settings → Resources → Memory
+
+    - Docker Desktop → Settings → Resources → Memory
 
 2. **Los builds subsiguientes serán mucho más rápidos** gracias a la caché
 
 3. **El volumen usa flag `:delegated`** que mejora performance en macOS
 
 ## 🏗️ Notas Técnicas de la Implementación
-
-### Problemas Resueltos
-
-Durante el desarrollo de esta configuración multiplataforma se resolvieron varios problemas complejos:
-
-1. **Puerto 5000 ocupado en macOS**: AirPlay Receiver usa el puerto 5000 por defecto → **Solución**: Puerto 5001
-
-2. **SQLite incompatible entre arquitecturas**: Archivos `.db` creados en Linux x86_64 no funcionan en macOS ARM64 → **Solución**: Volúmenes Docker exclusivos para datos
-
-3. **Permisos filesystem**: Linux usa UID/GID numéricos, macOS usa ACLs → **Solución**: Volúmenes Docker + `chmod 777` en directorios críticos
-
-4. **Conflicto de nombres**: MSBuild intentaba crear archivo ejecutable `UmbracoSite` pero existía directorio con ese nombre → **Solución**: `AssemblyName=UmbracoApp` en `.csproj`
-
-5. **SQLite requiere librerías nativas del sistema**: Instalación de `sqlite3` y `libsqlite3-dev` en Dockerfile para garantizar compatibilidad
 
 ### Estructura de Volúmenes
 
@@ -370,36 +367,9 @@ Los directorios `bin/` y `obj/` se generan dentro del contenedor y **NO se monta
 
 ## 📚 Recursos
 
-- [Documentación oficial de Umbraco](https://docs.umbraco.com/)
-- [Umbraco en Docker - Mejores prácticas](https://umbraco.com/blog/running-umbraco-in-docker/)
-- [.NET Hot Reload](https://aka.ms/dotnet/hot-reload)
-- [Docker Compose v2 Documentation](https://docs.docker.com/compose/)
+-   [Documentación oficial de Umbraco](https://docs.umbraco.com/)
+-   [Umbraco en Docker - Mejores prácticas](https://umbraco.com/blog/running-umbraco-in-docker/)
+-   [.NET Hot Reload](https://aka.ms/dotnet/hot-reload)
+-   [Docker Compose v2 Documentation](https://docs.docker.com/compose/)
 
-## 🤝 Contribuir
-
-Si encontrás bugs o tenés sugerencias, por favor:
-
-1. Abrí un issue describiendo el problema
-2. Incluí logs relevantes: `docker compose logs umbraco`
-3. Mencioná tu sistema operativo y arquitectura (Intel/ARM)
-
-## 📝 Changelog
-
-### v1.1.0 (Dic 2024)
-- 🔧 **FIX**: Agregadas librerías nativas SQLite al Dockerfile
-- 🔧 Connection string optimizado
-- ✅ Garantiza funcionamiento en clones nuevos del repositorio
-
-### v1.0.0 (Dic 2024)
-- ✅ Configuración inicial multiplataforma
-- ✅ Umbraco 17.0.2 con .NET 10
-- ✅ SQLite en volúmenes Docker
-- ✅ Hot reload con `dotnet watch`
-- ✅ Scripts helpers (dev-start, reset-db, check-requirements)
-- ✅ Documentación completa
-
----
-
-**Desarrollado por IMERGI** | 2025
-
-> Este proyecto fue configurado y optimizado para funcionar de forma consistente en Linux, macOS (Intel/Apple Silicon) y Windows, resolviendo problemas comunes de compatibilidad de Docker + .NET + SQLite en diferentes plataformas.
+**Desarrollado por IMERGI** | 2026
